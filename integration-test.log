@@ -1,0 +1,15 @@
+✔ Scenario: Add a measurement with valid (numeric) values
+✔ Scenario: Cannot add a measurement with invalid values
+✔ Scenario: Cannot add a measurement without a timestamp
+✔ Scenario: Get a specific measurement
+✔ Scenario: Get a measurement that does not exist
+✔ Scenario: Get stats for a well-reported metric
+✔ Scenario: Get stats for a sparsely reported metric
+✔ Scenario: Get stats for a metric that has never been reported
+✔ Scenario: Get stats for more than one metric
+
+9 scenarios (9 passed)
+30 steps (30 passed)
+0m11.518s
+
+No new scenarios found! Be sure to tag your new scenarios with @new.

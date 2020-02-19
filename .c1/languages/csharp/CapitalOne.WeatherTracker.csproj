@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>bin</OutputPath>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <AssemblyName>weathertracker</AssemblyName>
+    <TesterVersion>1.1.1</TesterVersion>
+    <LogFile>integration-test.log</LogFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="src/**/*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
+  </ItemGroup>
+
+  <Target Name="NPMInstall" BeforeTargets="Restore">
+    <Exec Command="npm install --no-save --prefix . ./assets/c1-code-test-take-home-tester-$(TesterVersion).tgz" />
+  </Target>
+
+  <Target Name="TestIntegration" DependsOnTargets="Build; NPMInstall">
+    <Exec Command="npm bin" ConsoleToMSBuild="true" EchoOff="true" StandardOutputImportance="Low">
+      <Output TaskParameter="ConsoleOutput" PropertyName="NPMBin" />
+    </Exec>
+
+    <Exec EchoOff="false" Command="node --no-warnings $(NPMBin)/take-home-integration-test features --no-color --check-new --command 'dotnet $(OutputPath)$(AssemblyName).dll' --port 8000 --out-file $(LogFile) -- --tags 'not @skip'" />
+  </Target>
+
+</Project>

@@ -1,0 +1,11 @@
+{
+  "language": "JavaScript",
+  "platform": "NodeJS",
+  "platformVersion": "8.15.1",
+  "tags": [
+    "javascript"
+  ],
+  "paths": [
+    "languages/javascript"
+  ]
+}

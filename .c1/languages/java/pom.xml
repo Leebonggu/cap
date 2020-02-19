@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.capitalone</groupId>
+  <artifactId>weathertracker</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>weathertracker</name>
+  <description></description>
+
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.0.4.RELEASE</version>
+    <relativePath/>
+  </parent>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <takeHomeTester.version>1.1.1</takeHomeTester.version>
+    <takeHomeTester.port>8000</takeHomeTester.port>
+    <takeHomeTester.logFile>integration-test.log</takeHomeTester.logFile>
+    <weathertracker.mainClass>com.capitalone.weathertracker.WeatherTrackerApplication</weathertracker.mainClass>
+    <npm.binDirectory>node_modules/.bin</npm.binDirectory>
+
+    <start-class>${weathertracker.mainClass}</start-class>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <finalName>${project.artifactId}</finalName>
+
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>2.0.4.RELEASE</version>
+        <configuration>
+          <mainClass>${weathertracker.mainClass}</mainClass>
+          <layout>JAR</layout>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.6.0</version>
+        <executions>
+          <execution>
+            <id>install-tester</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>npm</executable>
+              <arguments>
+                <argument>install</argument>
+                <argument>--no-save</argument>
+                <argument>./assets/c1-code-test-take-home-tester-${takeHomeTester.version}.tgz</argument>
+                <argument>--prefix</argument>
+                <argument>.</argument>
+              </arguments>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>integration-test</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <skip>${skipTests}</skip>
+              <executable>node</executable>
+              <arguments>
+                <argument>--no-warnings</argument>
+                <argument>${npm.binDirectory}/take-home-integration-test</argument>
+                <argument>features</argument>
+                <argument>--check-new</argument>
+                <argument>--no-color</argument>
+                <argument>--command</argument>
+                <argument>java -jar ${project.build.directory}/${project.build.finalName}.jar</argument>
+                <argument>--port</argument>
+                <argument>${takeHomeTester.port}</argument>
+                <argument>--out-file</argument>
+                <argument>${takeHomeTester.logFile}</argument>
+                <argument>--</argument>
+                <argument>--tags</argument>
+                <argument>not @skip</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

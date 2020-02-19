@@ -1,0 +1,14 @@
+target
+node_modules
+
+*.log
+
+
+
+# Keep these so the java stub project doesn't cause errors
+**/*.class
+**/java/bin/**/*
+**/java/bin/*
+**/.classpath
+**/.project
+**/.settings
